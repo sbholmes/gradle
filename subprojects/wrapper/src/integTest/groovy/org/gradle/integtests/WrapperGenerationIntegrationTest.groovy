@@ -16,6 +16,7 @@
 
 package org.gradle.integtests
 
+
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.test.fixtures.ConcurrentTestUtil
 import org.gradle.util.TextUtil
@@ -78,6 +79,14 @@ class WrapperGenerationIntegrationTest extends AbstractIntegrationSpec {
         file("first/gradle/wrapper/gradle-wrapper.properties").md5Hash == file("second/gradle/wrapper/gradle-wrapper.properties").md5Hash
         file("first/gradlew").md5Hash == file("second/gradlew").md5Hash
         file("first/gradlew.bat").md5Hash == file("second/gradlew.bat").md5Hash
+    }
+
+    def "can successfully run the wrapper task twice"() {
+        when:
+        succeeds("wrapper", "--gradle-version=5.0")
+
+        then:
+        executer.usingExecutable("gradlew").withTasks("wrapper").run()
     }
 
     def "generated wrapper does not change unnecessarily"() {
